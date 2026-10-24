@@ -1,0 +1,12 @@
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
+const userSchema = new Schema({ name: { type: String, required: true, trim: true, maxlength: 80 }, email: { type: String, required: true, unique: true, lowercase: true, trim: true }, passwordHash: { type: String, required: true, select: false }, themePreference: { type: String, enum: ['light','dark','system'], default: 'system' } }, { timestamps: true });
+const taskSchema = new Schema({ userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true }, title: { type: String, required: true, trim: true, maxlength: 160 }, description: { type: String, trim: true, maxlength: 2000, default: '' }, status: { type: String, enum: ['pending','completed'], default: 'pending' }, priority: { type: String, enum: ['low','medium','high'], default: 'medium' }, dueDate: { type: Date, default: null }, completedAt: { type: Date, default: null } }, { timestamps: true });
+taskSchema.index({ userId: 1, status: 1, dueDate: 1 });
+const optionSchema = new Schema({ id: String, text: { type: String, maxlength: 500 } }, { _id: false });
+const questionSchema = new Schema({ id: String, text: { type: String, maxlength: 1500 }, options: [optionSchema], correctOptionId: String, explanation: { type: String, maxlength: 2000 }, fingerprint: String }, { _id: false });
+const quizSchema = new Schema({ userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true }, subject: String, topic: String, difficulty: { type: String, enum: ['easy','medium','hard'] }, questions: [questionSchema], answers: { type: Map, of: String, default: {} }, score: { type: Number, default: null }, correctCount: { type: Number, default: null }, incorrectCount: { type: Number, default: null }, unansweredCount: { type: Number, default: null }, accuracy: { type: Number, default: null }, startedAt: { type: Date, default: Date.now }, submittedAt: { type: Date, default: null }, generationMode: String }, { timestamps: true });
+quizSchema.index({ userId: 1, createdAt: -1 });
+export const User = mongoose.models.User || model('User', userSchema);
+export const Task = mongoose.models.Task || model('Task', taskSchema);
+export const Quiz = mongoose.models.Quiz || model('Quiz', quizSchema);

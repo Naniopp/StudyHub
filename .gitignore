@@ -1,0 +1,10 @@
+node_modules/
+client/dist/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+/.headless*/
+/studyhub-preview*.png

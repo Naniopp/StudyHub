@@ -1,0 +1,3 @@
+# Deployment notes
+
+Build with `npm run build`. Serve `client/dist` from a static host and run `server` as a Node service. Set `MONGODB_URI`, a long random `SESSION_SECRET`, `CLIENT_URL`, `NODE_ENV=production`, `AI_API_KEY`, and `AI_MODEL` in the server environment. Set `VITE_API_URL` at frontend build time if the API is not available at the default URL. Permit only the deployed frontend origin in CORS. Use HTTPS and secure cookies; for cross-site frontend/API hosts, configure SameSite=None; Secure and add CSRF defenses before deployment. Restrict the Atlas database user and network access. Configure `/api/health` as the health probe. Keep secrets in the host secret manager, not repository variables committed to source.
